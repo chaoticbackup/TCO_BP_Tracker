@@ -1,0 +1,12 @@
+{
+	"manifest_version": 2,
+
+	"name": "TCO BP Tracker",
+	"description": "Allows users to see their current build points in the TCO deck builder.",
+
+	"permissions": [],
+
+	"background": {
+		"scripts": ["background.js"]
+	}
+}
