@@ -11,7 +11,7 @@
 		document.getElementById("main_content").appendChild(node);
 
 		// Check the BP on initial load
-		$('#tracker').load(chrome.extension.getURL("tracker.html"), function() {
+		$('#tracker').load(chrome.extension.getURL("html/tracker.html"), function() {
 			let type = (function() {if (cond1) return "show"; if (cond2) return "edit"})();
 
 			if (type === "edit") 
