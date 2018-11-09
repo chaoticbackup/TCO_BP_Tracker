@@ -1,29 +1,4 @@
-(function() {
-	// if ($('input[value="editDeck"]').length) {
-	let cond1 = (window.location.href.indexOf("showDeck") > -1 
-		&& window.location.href.indexOf("extended_format") > -1);
-	let cond2 = ($("b:contains('Edit your Deck')").length);
-
-	if ($("a:contains('Chaotic TCG')") && (cond1 || cond2)) {
-		// Inject the html for the tracker	
-		var node = document.createElement("div");
-		node.id = "tracker";
-		document.getElementById("main_content").appendChild(node);
-
-		// Check the BP on initial load
-		$('#tracker').load(chrome.extension.getURL("html/tracker.html"), function() {
-			let type = (function() {if (cond1) return "show"; if (cond2) return "edit"})();
-
-			if (type === "edit") 
-				// Re-Check the BP when the decklist changes
-				$('#deck_sections_container').on("change", ":input", checkBP("edit"));
-			else
-				checkBP(type);
-		});
-	}
-})();
-
-function checkBP(type) {
+export function checkBP(type) {
 	var cards = 0, bp = 0;
 	if (type === "edit") {
 		// Find Attack Section
