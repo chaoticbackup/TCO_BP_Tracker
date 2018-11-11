@@ -1,6 +1,7 @@
 import {injectBPTracker} from './tracker.js';
 import {exportDeck} from './exportDeck';
 import {importDeck} from './importDeck';
+import {deleteDeck} from './deleteDeck';
 
 (function() {
 	// if ($('input[value="editDeck"]').length) {
@@ -12,7 +13,10 @@ import {importDeck} from './importDeck';
 		let type = (function() {if (cond1) return "show"; if (cond2) return "edit"})();
 
 		injectBPTracker(type);
-		// TODO inject the import/export bottom elsewhere on the page
+
+		if (type == "edit") {
+			// TODO inject the import/export on the page
+		}
 	}
 })();
 
