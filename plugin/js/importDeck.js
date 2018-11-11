@@ -59,17 +59,17 @@ export function importDeck(event) {
 				// tell user what is wrong
 				return displayError("illegal deck\n" + error);
 			}
-			else buildDeck(contents, (error) => {
+			console.log("building deck, please wait"); // TODO tell building deck
+			buildDeck(contents, (error) => {
 				if (error) {
 					// TODO inform user why the deck building failed
 					return displayError("deck building error\n" + error);
 				}
 				else {
-					// TODO tell building deck
-					console.log("building deck, please wait");
+					console.log("deck built, refreshing page");
 					// TODO refresh page after built to see changes
 				}
-			});
+			}); 
 		});
 	});
 }
@@ -114,39 +114,96 @@ function checkDeckLegal(contents, callback) {
 }
 
 function buildDeck(deck, callback) {
-	// TODO
-	console.log("building deck");
+
+	let cardIDs = { attacks: [], battlegear: [], 
+			creatures: [], locations: [], mugic: [] };
 	let error = "";
 
-	// Attacks
-	// deck.attacks.forEach(attack => {
+	const url = "http://www.tradecardsonline.com/get_cards_with_name.php?game_id=82&card_name=";
 
-	// });
-
-	var url = "http://www.tradecardsonline.com/get_cards_with_name.php?game_id=82&card_name=";
-	var xhttp = new XMLHttpRequest();
-
-	let getCardID = (cardName) => {
-			xhttp.onreadystatechange = function() {
-		    if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-			    if (this.responseText.indexOf("No matches found!")) {
-			    	error += `invalid card: "${cardName}"`;
-			    }
-			    else {
-			    	console.log(this);
-			    }
+	let getCardID = async (cardName, resolve, reject) => {
+		const xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	    	console.log(url + encodeURI(cardName.trim()));
+	    	console.log(this.responseText);
+		    if (this.responseText.indexOf("No matches found!") > -1) {
+		    	return reject(`invalid card: "${cardName}"`);
 		    }
-		  };
-
-		  xhttp.open("GET", (url + encodeURI(cardName.trim())), false);
-		  xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-		  xhttp.send();
+		    else {
+		    	//TODO parse html
+		    	return resolve();
+		    }
+	    }
+	  };
+	  xhttp.open("GET", (url + encodeURI(cardName.trim())), true);
+	  xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	  xhttp.send();
 	}
 
-	getCardID(deck.creatures[0]) // TODO make promise
-	// TODO appen
-	
+	// https://stackoverflow.com/questions/41079410/delays-between-promises-in-promise-chain
+/*
+	let paramerterArr = ['a','b','c','d','e','f']
+	parameterArr.reduce(function(promise, item) {
+	  return promise.then(function(result) {
+	    return Promise.all([delay(50), mySpecialFunction(item)]);
+	  })
+	}, Promise.resolve())
+*/
 
-  return callback(error);
+	// This hidious promise setup is to make sure all the cards
+	// are checked to exist before attempting to send the post request
+	// with the returned card ids
+	// https://stackoverflow.com/questions/41079410/delays-between-promises-in-promise-chain
+	const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+	(async () => {
+		// merges all the cards in the deck
+		return await Promise.all(
+			[deck.attacks, deck.battlegear, 
+			deck.creatures, deck.locations, deck.mugic]
+		.map(type => {
+			// Sequentially makes the requests per type
+			return type.reduce((promise, task) => {
+				return promise.then(() => {
+					console.log(task);
+				  // return Promise.all([delay(50), new Promise((resolve, reject) => {
+				  // 	return getCardID(attack, resolve, reject);
+				  // })
+		  // 		.then((id) => {
+		  // 			cardIDs.creatures.push(id);
+		  // 		})
+		  // 		.catch((err) => {
+		  // 			error += err + "\n";
+		  // 		});
+				});
+			}, Promise.resolve().then(results => {
+				// TODO
+				console.log(results);
+			}));
+		}));
+	})().then(() => {
+		console.log(cardIDs);
+		return callback(error);
+	});
+
+
+	// (async () => {
+	// 	return await Promise.all(deck.creatures.map((attack) => {
+	// 		return new Promise((resolve, reject) => {
+	// 			return getCardID(attack, resolve, reject);
+	// 		})
+	// 		.then((id) => {
+	// 			cardIDs.creatures.push(id);
+	// 		})
+	// 		.catch((err) => {
+	// 			error += err + "\n";
+	// 		});
+	// 	}));
+	// })()
+	// .then(() => {
+	// 	console.log(cardIDs);
+	// 	return callback(error);
+	// });
+
 }
+
