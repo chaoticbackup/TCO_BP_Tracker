@@ -9,27 +9,24 @@ const path = require('path');
 var config = {
 	entry: {
 		"content-script":  ['./plugin/js/main.js'],
-		"background": './plugin/background.js'
+		"background": ['./plugin/background.js']
 	},
-
-	// plugins: [
- //    new ChromeExtensionReloader({
- //      entries: { 
- //        "content-script": ['main'],
- //        background: 'background'
- //      }
- //    })
-	// ],
 
 	output: {
 		publicPath: ".",
-  	filename: '[name].js',
-  	path: path.resolve(__dirname, 'dist/'),
-  	libraryTarget: "umd"
+		filename: '[name].js',
+		path: path.resolve(__dirname, 'dist/'),
+		libraryTarget: "umd"
 	},
 
 	plugins: [
 		process.env.NODE_ENV === "development"? new ChromeExtensionReloader() : null,
+		//    new ChromeExtensionReloader({
+		//      entries: { 
+		//        "content-script": ['content-script'],
+		//        background: 'background'
+		//      }
+		//    })
 
 		// new ExtractTextPlugin({ filename: "css/[name].css" }),
 
@@ -45,23 +42,23 @@ var config = {
 	].filter(plugin => !!plugin),
 
 	module: {
-	  rules: [
-	  	{
-	    	test: /\.js?$/,
-	    	exclude: /node_modules/,
-  	  	use: {
-  	  		loader: "babel-loader"
-	    	}
-	  	}, 
-	  	{
-      	test: /\.css$/,
-      	exclude: /node_modules/,
-      	use: ExtractTextPlugin.extract({
-       		fallback: "style-loader",
-        	use: "css-loader",
-      	})
-      }
-	  ]
+		rules: [
+			{
+				test: /\.js?$/,
+				exclude: /node_modules/,
+				use: {
+					loader: "babel-loader"
+				}
+			}, 
+			{
+				test: /\.css$/,
+				exclude: /node_modules/,
+				use: ExtractTextPlugin.extract({
+					fallback: "style-loader",
+					use: "css-loader",
+				})
+			}
+		]
 	}
 }
 
