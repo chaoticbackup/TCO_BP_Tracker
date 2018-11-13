@@ -115,21 +115,17 @@ function checkDeckLegal(contents, callback) {
 
 const url = "http://www.tradecardsonline.com/get_cards_with_name.php?game_id=82&card_name=";
 const getCardID = async (cardName, resolve, reject) => {
-	const xhttp = new XMLHttpRequest();
+	return setTimeout(() => {resolve(1)}, 100);
+	let xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-    	console.log(this.responseText);
 	    if (this.responseText.indexOf("No matches found!") > -1) {
 	    	return reject(`invalid card: "${cardName}"`);
 	    }
 	    else {
-	    	//TODO parse html
-	    	// let parser = new DOMParser();
-	    	// let doc = parser.parseFromString(this.responseText)
-	    	var xmlDoc = $.parseXML(this.responseText);
-	    	$xml = $(xmlDoc);
-	    	console.log($xml);
-	    	return resolve();
+	    	let htmlDoc = $.parseHTML(this.responseText);
+	    	let id = $(htmlDoc).find('li').first().attr('id');
+	    	return resolve(id);
 	    }
     }
   };
@@ -152,37 +148,71 @@ function buildDeck(deck, callback) {
 	// with the returned card ids
 	// https://stackoverflow.com/questions/41079410/delays-between-promises-in-promise-chain
 	const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-	getCardID(deck.creatures[0]);
-/*
+	
 	// merges all the cards in the deck sequentially 
-	["attacks", "battlegear", "creatures", "locations", "mugic"]
-	.reduce((promise, type) => {
-		return promise.then(() => {
-			return deck[type].reduce((promise, cardName) => {
-				return promise.then(() => {
-				  return Promise.all([delay(100), new Promise((resolve, reject) => {
-				  	return getCardID(attack, resolve, reject);
-				  })
-		  		.then((id) => {
-		  			cardIDs[type].push(id);
-		  		})
-		  		.catch((err) => {
-		  			error += err + "\n";
-		  		});
-				});
-			}, Promise.resolve().then(results => {
-				// TODO
-				// console.log(results);
-			}));
+	Promise.all(["attacks", "battlegear", "creatures", "locations", "mugic"]
+	.map((type) => {
+		return deck[type].reduce((promise, cardName) => {
+			return promise.then(() => {
+			  return Promise.all([
+			  	delay(100), 
+			  	new Promise((resolve, reject) => {
+			  		return getCardID(cardName, resolve, reject);
+			  	})
+			  	.then((id) => {
+			  		return cardIDs[type].push(id);
+			  	})
+			  	.catch((err) => {
+			  		return error += err + "\n";
+			  	})
+			  ]);
+			});
+		}, Promise.resolve())
+		.then((results) => {
+			// console.log(type + " done");
 		});
-	}, Promise.resolve().then(() => {
+	})).then(results => {
 		console.log(cardIDs);
-
-		if (error)
+		if (error) {
+			console.log(error);
 			return callback(error);
+		}
 		
-		// addCardByID
+		// TODO addCardByID
+		callback();
+	});
 
-	}));
-*/
 }
+
+/*
+Promise.all(["attacks", "battlegear", "creatures", "locations", "mugic"]
+.map((type) => {
+	return deck[type].map((cardName) => {
+	  return Promise.all([
+	  	delay(100), 
+	  	new Promise((resolve, reject) => {
+	  		getCardID(cardName, resolve, reject);
+	  	})
+	  	.then((id) => {
+	  		console.log(cardName);
+	  		return cardIDs[type].push(id);
+	  	})
+	  	.catch((err) => {
+	  		return error += err + "\n";
+	  	})
+	  ]);
+	}, Promise.resolve().then(results => {
+		// TODO find out why this is after
+		console.log(results||type + " done");
+	}));
+})).then(results => {
+	console.log(cardIDs);
+	if (error) {
+		console.log(error);
+		return callback(error);
+	}
+	
+	// TODO addCardByID
+	callback();
+});*/
+
