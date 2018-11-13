@@ -8,8 +8,8 @@ const path = require('path');
 
 var config = {
 	entry: {
-    "content-script": './plugin/js/main.js',
-    "background": './plugin/background.js'
+		"content-script":  ['./plugin/js/main.js'],
+		"background": './plugin/background.js'
 	},
 
 	// plugins: [
@@ -22,10 +22,10 @@ var config = {
 	// ],
 
 	output: {
-	publicPath: ".",
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'dist/'),
-    libraryTarget: "umd"
+		publicPath: ".",
+  	filename: '[name].js',
+  	path: path.resolve(__dirname, 'dist/'),
+  	libraryTarget: "umd"
 	},
 
 	plugins: [
@@ -50,10 +50,7 @@ var config = {
 	    	test: /\.js?$/,
 	    	exclude: /node_modules/,
   	  	use: {
-  	  		loader: "babel-loader",
-      		options: {
-        		presets: [require("babel-preset-es2015")]
-	      	}
+  	  		loader: "babel-loader"
 	    	}
 	  	}, 
 	  	{
