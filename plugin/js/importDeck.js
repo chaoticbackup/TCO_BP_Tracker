@@ -52,8 +52,7 @@ export function importDeck(event) {
 		}
 
 		checkDeckLegal(contents, (error) => {
-			if (false) { // TODO readd check
-			// if (error) {
+			if (error) {
 				// TODO inform user imported deck isn't legal
 				// add a help option for valid deck formats
 				// tell user what is wrong
@@ -67,8 +66,7 @@ export function importDeck(event) {
 				}
 				else {
 					// refresh page after built to see changes
-					console.log("deck built, refreshing page"); // TODO remove
-					// window.location.reload(false); 
+					window.location.reload(false); 
 				}
 			}); 
 		});
@@ -114,32 +112,32 @@ function checkDeckLegal(contents, callback) {
 	return callback(error);
 }
 
+const types = ["attacks", "battlegear", "creatures", "locations", "mugic"];
 function buildDeck(deck, callback) {
 	let cardIDs = { attacks: [], battlegear: [], 
 			creatures: [], locations: [], mugic: [] };
 	let error = "";
 
 	// TODO remove test
-	return new Promise((resolve, reject) => {
-		getCardID(deck.creatures[0], resolve, reject);
-	}).then((id) => {
-		console.log(id);
-		return new Promise((resolve, reject) => {
-			addCardByID(id, 'creatures', resolve, reject);
-		});
-	}).then(() => {
-		callback();
-	});
+	// return new Promise((resolve, reject) => {
+	// 	getCardID(deck.creatures[0], resolve, reject);
+	// }).then((id) => {
+	// 	console.log(id);
+	// 	return new Promise((resolve, reject) => {
+	// 		addCardByID(id, 'creatures', resolve, reject);
+	// 	});
+	// }).then(() => {
+	// 	callback();
+	// });
 
 	// This hidious promise setup is to make sure all the cards
-	// are checked to exist before attempting to send the post request
-	// with the returned card ids
+	// are checked to exist before attempting to send the get and post requests
+	// for the returned card ids to be added to the deck
 	// https://stackoverflow.com/questions/41079410/delays-between-promises-in-promise-chain
 	const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 	// merges all the cards in the deck sequentially 
-	Promise.all(["attacks", "battlegear", "creatures", "locations", "mugic"]
-	.map((type) => {
+	Promise.all(types.map((type) => {
 		return deck[type].reduce((promise, cardName) => {
 			return promise.then(() => {
 			  return Promise.all([
@@ -155,18 +153,34 @@ function buildDeck(deck, callback) {
 			  	})
 			  ]);
 			});
-		}, Promise.resolve())
-		.then((results) => {});
+		}, Promise.resolve());
 	})).then((results) => {
-
 		if (error) {
-			console.log(error);
 			return callback(error);
 		}
 		
-		// TODO addCardByID
-		console.log(cardIDs);
-		callback();
+		// addCardByID
+		Promise.all(types.map((type) => {
+			return cardIDs[type].reduce((promise, cardID) => {
+				return promise.then(() => {
+				  return Promise.all([
+				  	delay(100), 
+				  	new Promise((resolve, reject) => {
+				  		return addCardByID(cardID, type, resolve, reject);
+				  	})
+				  	.catch((err) => {
+				  		return error += err + "\n";
+				  	})
+				  ]);
+				});
+			}, Promise.resolve());
+		})).then((results) => {
+			if (error) {
+				return callback(error);
+			}
+
+			return callback();
+		});	
 	});
 
 }
@@ -220,25 +234,21 @@ const addCardByID = async (cardID, cardType, resolve, reject) => {
 			break;
 	}
 
-	let post_data = "";
-	post_data = "rs=add_item_to_deck";
-	post_data += "&rst=";
-	post_data += "&rsrnd="+ new Date().getTime();
-	post_data += "&rsargs[]=" + encodeURIComponent(JSON.stringify({
-	  game_id: "82",
-	  deck_id: $("input[name='deck_id']").first().attr('value'),
-	  card_id: cardID,
-	  amount: 1,
-	  section_id: section_id,
-	  section_name: section_name
-	}));
-
-	console.log(post_data);
+	let post_data = "rs=add_item_to_deck"
+		+ "&rst="
+		+ "&rsrnd=" + new Date().getTime()
+		+ "&rsargs[]=" + encodeURIComponent(JSON.stringify({
+		  game_id: "82",
+		  deck_id: $("input[name='deck_id']").first().attr('value'),
+		  card_id: cardID,
+		  amount: 1,
+		  section_id: section_id,
+		  section_name: section_name
+		}));
 
 	let x = new XMLHttpRequest();
 	x.onreadystatechange = function() {
     if (this.readyState == 4) {
-    	console.log(this.status);
     	if (this.status == 200) {
 				return resolve();
     	}
@@ -251,51 +261,5 @@ const addCardByID = async (cardID, cardType, resolve, reject) => {
 	x.setRequestHeader("Method", "POST " + cardAddURL + " HTTP/1.1");
 	x.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	x.send(post_data);
-
-/*
-post_data = "rs=" + escape(func_name);
-post_data += "&rst=" + escape(sajax_target_id);
-post_data += "&rsrnd=" + new Date().getTime();
-for (i = 0; i < args.length-1; i++) {
-    if (args[i] instanceof Object) {
-        args[i] = JSON.stringify(args[i]);
-    }
-    post_data = post_data + "&rsargs[]=" + escape(args[i]);
 }
-
-//http://www.tradecardsonline.com/ajax.php?rs=add_item_to_deck&rst=&rsrnd=1541624404930&rsargs[]=%7B%22game_id%22%3A%2282%22%2C%22deck_id%22%3A%22875857%22%2C%22card_id%22%3A%22176316%22%2C%22amount%22%3A%221%22%2C%22section_id%22%3A%220%22%2C%22section_name%22%3A%22none%22%7D
-*/
-}
-
-/*
-Promise.all(["attacks", "battlegear", "creatures", "locations", "mugic"]
-.map((type) => {
-	return deck[type].map((cardName) => {
-	  return Promise.all([
-	  	delay(100), 
-	  	new Promise((resolve, reject) => {
-	  		getCardID(cardName, resolve, reject);
-	  	})
-	  	.then((id) => {
-	  		console.log(cardName);
-	  		return cardIDs[type].push(id);
-	  	})
-	  	.catch((err) => {
-	  		return error += err + "\n";
-	  	})
-	  ]);
-	}, Promise.resolve().then(results => {
-		// TODO find out why this is after
-		console.log(results||type + " done");
-	}));
-})).then(results => {
-	console.log(cardIDs);
-	if (error) {
-		console.log(error);
-		return callback(error);
-	}
-	
-	// TODO addCardByID
-	callback();
-});*/
 
