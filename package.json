@@ -1,0 +1,31 @@
+{
+  "name": "tracker",
+  "version": "1.0.0",
+  "description": "Allows users to see their current build points in the deck builder for Chaotic TCG.",
+  "scripts": {
+    "start": "set NODE_ENV=development&& webpack --config webpack.config.js --watch",
+    "build": "set NODE_ENV=production&& webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaoticbackup/TCO_BP_Tracker.git"
+  },
+  "author": "Danude Sandstorm",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.1.5",
+    "@babel/plugin-transform-regenerator": "^7.0.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.1.5",
+    "babel-loader": "^8.0.4",
+    "copy-webpack-plugin": "^4.6.0",
+    "css-loader": "^1.0.1",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "style-loader": "^0.23.1",
+    "webpack": "^3.12.0",
+    "webpack-chrome-extension-reloader": "^0.8.3"
+  },
+  "dependencies": {
+    "jsonlint": "^1.6.3"
+  }
+}

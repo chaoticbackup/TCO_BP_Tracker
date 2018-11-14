@@ -1,0 +1,54 @@
+#tracker {
+	position: fixed;
+	width: 80px;
+	height: 50px;
+	border: 1px solid black;
+	top: 0;
+	left: 0;
+	background-color: #dee3e7;
+	margin-top: 10px;
+	margin-left: 20px;
+	padding-left: 2px;
+	line-height: 1.2em;
+}
+
+#tracker .bold {
+	font-weight: 800;
+	line-height: 1.4em;
+}
+
+#tracker.hide {
+	display: none;
+}
+
+/* grey out disabled buttons */
+input[type="button"]:disabled {
+	color: rgb(84, 84, 84);
+	cursor: default;
+}
+
+#importInput {
+	margin-bottom: .5em;
+	margin-right: 16px;
+}
+
+#contentDisplay {
+	white-space: pre-wrap;
+}
+
+#contentDisplay.visible {
+	margin-top: .5em;
+}
+
+#contentDisplay .error {
+	color: #B33;
+}
+
+#deleteConfirmation.hidden {
+	display: none;
+}
+
+#deleteConfirmation div {
+	margin-top: .5em;
+	margin-bottom: .5em;
+}
