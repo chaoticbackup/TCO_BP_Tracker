@@ -15,8 +15,38 @@ import {deleteDeck} from './deleteDeck';
 		injectBPTracker(type);
 
 		if (type == "edit") {
-			// TODO inject the import/export on the page
+			injectButtons();
 		}
 	}
 })();
 
+// inject the import/export on the page
+function injectButtons() {
+	var deckbuttons = document.createElement("tr");
+	$(deckbuttons).insertBefore($("input[type='submit'][value='Update']").parent().parent())
+
+	// Load our html into the page
+	$(deckbuttons).load(chrome.extension.getURL("html/deckbuttons.html"), function() {
+		$('#importInput').on('change', function(e) {
+			clearDisplay();
+			if (document.getElementById("importInput").files.length == 0 ) {
+				$('#importDeck').prop('disabled', true);
+			}
+			else {
+				$('#importDeck').prop('disabled', false);
+			}
+		});
+		$('#importDeck').on('click', importDeck);
+		$('#deleteDeck').on('click', deleteDeck);
+		$('#exportDeck').on('click', exportDeck);
+	});
+
+}
+
+export function display(msg) {
+	$('#contentDisplay').text(msg);
+}
+
+export function clearDisplay() {
+	$('#contentDisplay').empty();
+}

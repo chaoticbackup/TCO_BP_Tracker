@@ -21,7 +21,7 @@
 		{
 			"matches": ["*://www.tradecardsonline.com/*"],
 			"js": ["lib/jquery-3.3.1.min.js", "lib/jsonlint.js", "content-script.js"],
-			"css": ["css/tracker.css"]
+			"css": ["css/main.css"]
 		}
 	],
 
@@ -31,6 +31,7 @@
 	},
 
 	"web_accessible_resources": [
-		"html/tracker.html"
+		"html/tracker.html",
+		"html/deckbuttons.html"
 	]
 }

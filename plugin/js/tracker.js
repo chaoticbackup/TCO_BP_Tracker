@@ -1,5 +1,3 @@
-import {importDeck} from './importDeck';
-
 export function injectBPTracker(type) {
 	// Inject the html for the tracker	
 	var tracker = document.createElement("div");
@@ -7,7 +5,7 @@ export function injectBPTracker(type) {
 	document.getElementById("main_content").appendChild(tracker);
 
 	// Load our html into the page
-	$('#tracker').load(chrome.extension.getURL("html/tracker.html"), function() {
+	$(tracker).load(chrome.extension.getURL("html/tracker.html"), function() {
 		// Add event listener for changes in edit mode
 		if (type === "edit") {
 			// Check for the up/down arrows
@@ -20,9 +18,6 @@ export function injectBPTracker(type) {
 			});
 		}
 		checkBP(type); 	// Check the BP on initial load
-
-		// TODO move to own function in import
-		$('#importDeck').bind('change', importDeck);
 	});
 }
 

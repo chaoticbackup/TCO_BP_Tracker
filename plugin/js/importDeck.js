@@ -1,5 +1,7 @@
+import {display} from './main.js';
+
 function openFile(callback) {
-	var x = document.getElementById("importDeck");
+	var x = document.getElementById("importInput");
 	if ('files' in x) {
 		if (x.files.length == 0) {
 			return callback(null, "no file");
@@ -14,7 +16,6 @@ function openFile(callback) {
 				});
 
 				fr.readAsText(file);
-
 			} catch (err) {
 				return callback(null, err);
 			}
@@ -26,8 +27,8 @@ export function importDeck(event) {
 	let displayError = (error) => {
 		event.preventDefault();
 		event.stopPropagation();
-		console.log(error);	
-		// TODO, display on screen
+		display(error);
+		// TODO, format on screen
 	}
 
 	// check if deck already contains cards
@@ -42,7 +43,7 @@ export function importDeck(event) {
 			contents = JSON.parse(contents);
 		}
 		catch (error) {
-			// Return a specific parse error
+			// If json parsing fails return a specific parse error
 			try {
 				jsonlint.parse(contents)
 			} 
@@ -53,15 +54,11 @@ export function importDeck(event) {
 
 		checkDeckLegal(contents, (error) => {
 			if (error) {
-				// TODO inform user imported deck isn't legal
-				// add a help option for valid deck formats
-				// tell user what is wrong
 				return displayError("illegal deck\n" + error);
 			}
-			console.log("building deck, please wait"); // TODO tell building deck
+			display("building deck, please wait");
 			buildDeck(contents, (error) => {
 				if (error) {
-					// TODO inform user why the deck building failed
 					return displayError("deck building error\n" + error);
 				}
 				else {
@@ -117,18 +114,6 @@ function buildDeck(deck, callback) {
 	let cardIDs = { attacks: [], battlegear: [], 
 			creatures: [], locations: [], mugic: [] };
 	let error = "";
-
-	// TODO remove test
-	// return new Promise((resolve, reject) => {
-	// 	getCardID(deck.creatures[0], resolve, reject);
-	// }).then((id) => {
-	// 	console.log(id);
-	// 	return new Promise((resolve, reject) => {
-	// 		addCardByID(id, 'creatures', resolve, reject);
-	// 	});
-	// }).then(() => {
-	// 	callback();
-	// });
 
 	// This hidious promise setup is to make sure all the cards
 	// are checked to exist before attempting to send the get and post requests

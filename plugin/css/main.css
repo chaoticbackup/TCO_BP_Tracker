@@ -20,3 +20,18 @@
 #tracker.hide {
 	display: none;
 }
+
+/* grey out disabled buttons */
+input[type="button"]:disabled {
+	color: rgb(84, 84, 84);
+	cursor: default;
+}
+
+#importInput {
+	margin-bottom: .5em;
+	margin-right: 16px;
+}
+
+#contentDisplay {
+	white-space: pre-wrap;
+}
