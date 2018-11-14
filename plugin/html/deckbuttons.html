@@ -2,7 +2,12 @@
 	<div><input type="file" id="importInput" accept=".json"></div>
 	<input type="button" id="importDeck" value="Import Deck" disabled>
 	<input type="button" id="exportDeck" value="Export Deck" disabled>
-	<input type="button" id="deleteDeck" value="Delete Deck" disabled>
+	<input type="button" id="deleteDeck" value="Delete Deck">
+	<div id="deleteConfirmation" class="hidden">
+		<div>Are you sure you wish to delete this deck?</div>
+		<input type="button" id="confirmDelete" value="Delete">
+		<input type="button" id="denyDelete" value="Cancel">
+	</div>
 	<div id="contentDisplay"></div>
 </td>
 

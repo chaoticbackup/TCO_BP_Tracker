@@ -28,11 +28,11 @@ function injectButtons() {
 	// Load our html into the page
 	$(deckbuttons).load(chrome.extension.getURL("html/deckbuttons.html"), function() {
 		$('#importInput').on('change', function(e) {
-			clearDisplay();
 			if (document.getElementById("importInput").files.length == 0 ) {
 				$('#importDeck').prop('disabled', true);
 			}
 			else {
+				clearDisplay();
 				$('#importDeck').prop('disabled', false);
 			}
 		});
@@ -44,9 +44,9 @@ function injectButtons() {
 }
 
 export function display(msg) {
-	$('#contentDisplay').text(msg);
+	$('#contentDisplay').html(msg).addClass("visible");
 }
 
 export function clearDisplay() {
-	$('#contentDisplay').empty();
+	$('#contentDisplay').empty().removeClass("visible");
 }

@@ -35,3 +35,20 @@ input[type="button"]:disabled {
 #contentDisplay {
 	white-space: pre-wrap;
 }
+
+#contentDisplay.visible {
+	margin-top: .5em;
+}
+
+#contentDisplay .error {
+	color: #B33;
+}
+
+#deleteConfirmation.hidden {
+	display: none;
+}
+
+#deleteConfirmation div {
+	margin-top: .5em;
+	margin-bottom: .5em;
+}
