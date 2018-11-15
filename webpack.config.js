@@ -36,7 +36,7 @@ var config = {
 			{ from: "./plugin/lib", to: 'lib', toType: 'dir'}, // lib
 			{ from: "./plugin/html",  to: 'html', toType: 'dir'}, // html
 			{ from: "./plugin/icons",  to: 'icons', toType: 'dir'}, // icons
-			{ from: "./node_modules/jsonlint/web/jsonlint.js", to: 'lib/'} //jsonlint
+			{ from: "./node_modules/jsonlint/web/jsonlint.js", to: 'lib/'} // jsonlint
 		])
 
 	].filter(plugin => !!plugin),

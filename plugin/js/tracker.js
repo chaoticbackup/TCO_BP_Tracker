@@ -1,28 +1,4 @@
-export function injectBPTracker(type) {
-	// Inject the html for the tracker	
-	var tracker = document.createElement("div");
-	tracker.id = "tracker";
-	document.getElementById("main_content").appendChild(tracker);
-
-	// Load our html into the page
-	$(tracker).load(chrome.extension.getURL("html/tracker.html"), function() {
-		// Add event listener for changes in edit mode
-		if (type === "edit") {
-			// Check for the up/down arrows
-			$('#deck_section_table_86 span > a').on('click', function() {
-				checkBP('edit');
-			});
-			// Check for other input changes
-			$('#deck_section_table_86').on("change", function() { 
-				checkBP("edit");
-			});
-		}
-		checkBP(type); 	// Check the BP on initial load
-	});
-}
-
-
-function checkBP(type) {
+export function checkBP(type) {
 	var cards = 0, bp = 0;
 	if (type === "edit") {
 		// Find Attack Section
