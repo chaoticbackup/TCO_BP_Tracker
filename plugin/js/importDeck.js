@@ -4,7 +4,7 @@ function openFile(callback) {
   var x = document.getElementById("importInput");
   if ('files' in x) {
     if (x.files.length == 0) {
-      return callback(null, "no file provided");
+      return callback(null, "Please select a deck");
     }
     else {
       let file = x.files[0];
@@ -45,7 +45,7 @@ export function importDeck(event) {
   }
 
   openFile((contents, error) => {
-    if (error) return displayError("File Open Error", error);
+    if (error) return displayError(error);
 
     try {
       contents = JSON.parse(contents);
@@ -91,6 +91,8 @@ function checkDeckLegal(contents, callback) {
       size[type] = contents[type].length;
     }
   });
+
+  if (error) return callback(error);
 
   const requires = (param) => {
     error += `Deck Requires ${param}\n`;

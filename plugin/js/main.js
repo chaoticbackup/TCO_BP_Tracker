@@ -4,21 +4,36 @@ import {importDeck} from './importDeck';
 import {deleteDeck} from './deleteDeck';
 
 (function() {
-	// if ($('input[value="editDeck"]').length) {
-	let cond1 = (window.location.href.indexOf("showDeck") > -1 
-		&& window.location.href.indexOf("extended_format") > -1);
-	let cond2 = ($("b:contains('Edit your Deck')").length);
 
-	if ($("a:contains('Chaotic TCG')") && (cond1 || cond2)) {
-		let type = (function() {if (cond1) return "show"; if (cond2) return "edit"})();
+	if ($("a:contains('Chaotic TCG')")) {
+		// if ($('input[value="editDeck"]').length) {
+		let cond1 = (window.location.href.indexOf("showDeck") > -1 
+			&& window.location.href.indexOf("extended_format") > -1);
+		let cond2 = ($("b:contains('Edit your Deck')").length);
 
-		injectBPTracker(type);
-
-		if (type == "edit") {
-			injectButtons();
+		if (cond1 || cond2) {
+			let type = (function() {if (cond1) return "show"; else if (cond2) return "edit"})();
+			injectBPTracker(type);
+			if (type == "edit") {
+				injectButtons();
+			}
 		}
+		else {
+			injectExport();
+		}
+
 	}
+
 })();
+
+function injectExport() {
+	if ($("a:contains('extended display')")) {
+		//exportDeck('short');
+	} 
+	else if ($("a:contains('short display')")) {
+		//exportDeck('extended');
+	}
+}
 
 // inject the import/export on the page
 function injectButtons() {
@@ -37,8 +52,8 @@ function injectButtons() {
 			}
 		});
 		$('#importDeck').on('click', importDeck);
-		$('#deleteDeck').on('click', deleteDeck);
 		$('#exportDeck').on('click', exportDeck);
+		$('#deleteDeck').on('click', deleteDeck);
 	});
 
 }
