@@ -4,7 +4,7 @@ import {importDeck} from './importDeck';
 import {deleteDeck} from './deleteDeck';
 
 (function() {
-	if ($("a:contains('Chaotic TCG')")) {
+	if ($(".toolbar a:contains('Chaotic TCG')")) {
 		// if ($('input[value="editDeck"]').length) {
 		let cond1 = (window.location.href.indexOf("showDeck") > -1 
 			&& window.location.href.indexOf("extended_format") > -1);
