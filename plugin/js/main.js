@@ -32,6 +32,9 @@ export function display(msg) {
 
 export function clearDisplay() {
 	$('#contentDisplay').empty().removeClass("visible");
+	$('.confirmation').each(function() {
+		$(this).addClass('hidden');
+	});
 }
 
 function injectExport() {

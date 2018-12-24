@@ -1,7 +1,9 @@
 var FileSaver = require('file-saver');
+import {clearDisplay} from './main.js';
 
 export function exportDeck(layout) {
 	let deck = null, name = "deck";
+	clearDisplay();
 
 	if (layout == "short"){
 		deck = exportDeckShort();
@@ -16,7 +18,23 @@ export function exportDeck(layout) {
 		name = $(".forumline span.gen input[name='name']").val();
 	}
 
-	if (deck) saveDeck(deck, name);
+	if (deck) {
+		$('#exportConfirmation').removeClass("hidden");
+	
+		$('#export_json').one("click", function() {
+			savejsonDeck(deck, name);
+			$('#exportConfirmation').addClass("hidden");
+		});
+
+		$('#export_txt').one("click", function() {
+			savetxtDeck(deck, name);
+			$('#exportConfirmation').addClass("hidden");
+		});
+
+		$('#export_cancel').one("click", function() {
+			$('#exportConfirmation').addClass("hidden");
+		});
+	}
 }
 
 function getTypeBySection(section) {
@@ -34,11 +52,38 @@ function getType(tp) {
 }
 
 // Create File from deck name
-function saveDeck(deck, name) {
+function savejsonDeck(deck, name) {
 	let data = JSON.stringify(deck, null, 2);
 
 	let blob = new Blob([data], {type: 'text/json;charset=utf-8"'});
 	FileSaver.saveAs(blob, name+".json");
+}
+
+function savetxtDeck(deck, name) {
+	const list_cards = (type) => {
+		let data = `(${type.length} cards)\n`;
+		for (let i = 1; i < type.length; i++) {
+			if (type[i] == type[i-1]) {
+				data += `2x ${type[i]}\n`;
+				i++; // skip an index
+			}
+			else {
+				data += `2x ${type[i-1]}\n`;
+			}
+		}
+		return data;
+	}
+
+	let data = "";
+
+	data += "Attacks " + list_cards(deck.attacks);
+	data += "\nBattlegear " + list_cards(deck.battlegear);
+	data += "\nCreatures " + list_cards(deck.creatures);
+	data += "\nLocations " + list_cards(deck.locations);
+	data += "\nMugic " + list_cards(deck.mugic);
+
+	let blob = new Blob([data], {type: 'text/plain;charset=utf-8"'});
+	FileSaver.saveAs(blob, name+".txt");
 }
 
 function exportDeckEdit() {

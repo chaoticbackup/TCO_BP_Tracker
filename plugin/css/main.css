@@ -44,11 +44,11 @@ input[type="button"]:disabled {
 	color: #B33;
 }
 
-#deleteConfirmation.hidden {
+.confirmation.hidden {
 	display: none;
 }
 
-#deleteConfirmation div {
+.confirmation div {
 	margin-top: .5em;
 	margin-bottom: .5em;
 }

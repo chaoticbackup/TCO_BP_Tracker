@@ -3,7 +3,13 @@
 	<input type="button" id="importDeck" value="Import Deck">
 	<input type="button" id="exportDeck" value="Export Deck">
 	<input type="button" id="deleteDeck" value="Delete Deck">
-	<div id="deleteConfirmation" class="hidden">
+	<div id="exportConfirmation" class="confirmation hidden">
+		<div>Download deck list as:</div>
+		<input type="button" id="export_json" value="Deck">
+		<input type="button" id="export_txt" value="Text">
+		<input type="button" id="export_cancel" value="Cancel">
+	</div>
+	<div id="deleteConfirmation" class="confirmation hidden">
 		<div>Are you sure you wish to delete this deck?</div>
 		<input type="button" id="confirmDelete" value="Delete">
 		<input type="button" id="denyDelete" value="Cancel">

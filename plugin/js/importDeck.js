@@ -1,4 +1,4 @@
-import {display} from './main.js';
+import {display, clearDisplay} from './main.js';
 
 function openFile(callback) {
   var x = document.getElementById("importInput");
@@ -25,6 +25,7 @@ function openFile(callback) {
 
 export function importDeck(event) {
   // disable the button while building
+  clearDisplay();
   $('#importDeck').prop('disabled', true);
 
   let displayError = (error, msg) => {

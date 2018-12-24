@@ -3,7 +3,7 @@
 
 	"name": "TCO Chaotic Addon",
 	"description": "Improves deck building experience on TCO for Chaotic TCG users.",
-	"version": "2.2",
+	"version": "2.3",
 	"icons": {
 		"64": "icons/icon64.png",
 		"128": "icons/icon128.png"
