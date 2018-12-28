@@ -1,7 +1,7 @@
 var FileSaver = require('file-saver');
 import {clearDisplay} from './main.js';
 
-export function exportDeck(layout) {
+export function exportDeck(layout, format) {
 	let deck = null, name = "deck";
 	clearDisplay();
 
@@ -18,7 +18,15 @@ export function exportDeck(layout) {
 		name = $(".forumline span.gen input[name='name']").val();
 	}
 
-	if (deck) {
+	if (!deck) return;
+
+	else if (format == "json") {
+		savejsonDeck(deck, name);
+	}
+	else if (format == "txt") {
+		savetxtDeck(deck, name);
+	}
+	else {
 		$('#exportConfirmation').removeClass("hidden");
 	
 		$('#export_json').one("click", function() {

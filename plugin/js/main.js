@@ -40,13 +40,16 @@ export function clearDisplay() {
 function injectExport() {
 	let tmp = $("a[title*='Public web page']")
 		.parent().children().filter('div').first();
-	tmp.prepend(`<a href="javascript:;" id="exportDeck" title="Export the current deck to json file" style='cursor:pointer'>[Export Deck]&nbsp;&nbsp;</a>`);
-
+	tmp.prepend(`<a href="javascript:;" id="exportTXT" title="Export the current deck to txt file" style='cursor:pointer'>[Export Text]&nbsp;&nbsp;</a>`);
+	tmp.prepend(`<a href="javascript:;" id="exportJSON" title="Export the current deck to json file" style='cursor:pointer'>[Export JSON]&nbsp;&nbsp;</a>`);
+	
 	if ($("a[title*='standard'").length > 0) {
-		$('#exportDeck').on('click', exportDeck.bind(this, 'extended'));
+		$('#exportJSON').on('click', exportDeck.bind(this, 'extended', "json"));
+		$('#exportTXT').on('click', exportDeck.bind(this, 'extended', "txt"));
 	}
 	else if ($("a[title*='extended'").length > 0) {
-		$('#exportDeck').on('click', exportDeck.bind(this, 'short'));
+		$('#exportJSON').on('click', exportDeck.bind(this, 'short', "json"));
+		$('#exportTXT').on('click', exportDeck.bind(this, 'short', "txt"));
 	} 
 }
 
