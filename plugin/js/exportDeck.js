@@ -28,7 +28,7 @@ export function exportDeck(layout, format) {
 	}
 	else {
 		$('#exportConfirmation').removeClass("hidden");
-	
+
 		$('#export_json').one("click", function() {
 			savejsonDeck(deck, name);
 			$('#exportConfirmation').addClass("hidden");
@@ -70,13 +70,13 @@ function savejsonDeck(deck, name) {
 function savetxtDeck(deck, name) {
 	const list_cards = (type) => {
 		let data = `(${type.length} cards)\n`;
-		for (let i = 1; i < type.length; i++) {
-			if (type[i] == type[i-1]) {
+		for (let i = 0; i < type.length; i++) {
+			if (type[i] == type[i+1]) {
 				data += `2x ${type[i]}\n`;
-				i++; // skip an index
+				i++; //skip index
 			}
 			else {
-				data += `2x ${type[i-1]}\n`;
+				data += `1x ${type[i]}\n`;
 			}
 		}
 		return data;
@@ -95,7 +95,7 @@ function savetxtDeck(deck, name) {
 }
 
 function exportDeckEdit() {
-	let deck = { attacks: [], battlegear: [], 
+	let deck = { attacks: [], battlegear: [],
 	  creatures: [], locations: [], mugic: [] };
 
 	let addCardsSection = (elements) => {
@@ -122,7 +122,7 @@ function exportDeckEdit() {
 }
 
 function exportDeckShort() {
-	let deck = { attacks: [], battlegear: [], 
+	let deck = { attacks: [], battlegear: [],
 	  creatures: [], locations: [], mugic: [] };
 
 	let tmp = $('table.deck_section_table tbody').children().filter('tr.even');
@@ -141,7 +141,7 @@ function exportDeckShort() {
 }
 
 function exportDeckExtended() {
-	let deck = { attacks: [], battlegear: [], 
+	let deck = { attacks: [], battlegear: [],
 	  creatures: [], locations: [], mugic: [] };
 
 	let tmp = $('table.deck_section_table tbody').children().filter('tr.even');
