@@ -84,7 +84,10 @@ function savetxtDeck(deck, name) {
 
 	let data = "";
 
-	data += "Attacks " + list_cards(deck.attacks);
+	if (deck.description) {
+		data += "Description\n" + deck.description + "\n";
+	}
+	data += "\nAttacks " + list_cards(deck.attacks);
 	data += "\nBattlegear " + list_cards(deck.battlegear);
 	data += "\nCreatures " + list_cards(deck.creatures);
 	data += "\nLocations " + list_cards(deck.locations);
@@ -96,7 +99,7 @@ function savetxtDeck(deck, name) {
 
 function exportDeckEdit() {
 	let deck = { attacks: [], battlegear: [],
-	  creatures: [], locations: [], mugic: [] };
+	  creatures: [], locations: [], mugic: [], description: "" };
 
 	let addCardsSection = (elements) => {
 		$(elements).children().each(function(i, attack) {
@@ -118,12 +121,14 @@ function exportDeckEdit() {
 	addCardsSection($("#deck_section_table_85")); // locations
 	addCardsSection($("#deck_section_table_87")); // mugic
 
+	deck.description = $('#user_editable_text_area').text();
+
 	return deck;
 }
 
 function exportDeckShort() {
 	let deck = { attacks: [], battlegear: [],
-	  creatures: [], locations: [], mugic: [] };
+	  creatures: [], locations: [], mugic: [], description: "" };
 
 	let tmp = $('table.deck_section_table tbody').children().filter('tr.even');
 	tmp.each(function(i, card) {
@@ -137,12 +142,14 @@ function exportDeckShort() {
 		}
 	});
 
+	deck.description = $('#content_deck_text p').text();
+
 	return deck;
 }
 
 function exportDeckExtended() {
 	let deck = { attacks: [], battlegear: [],
-	  creatures: [], locations: [], mugic: [] };
+	  creatures: [], locations: [], mugic: [], description: ""};
 
 	let tmp = $('table.deck_section_table tbody').children().filter('tr.even');
 	for (let i = 0; i < tmp.length; i+=2) {
@@ -155,6 +162,8 @@ function exportDeckExtended() {
 			deck[type].push(name);
 		}
 	}
+
+	deck.description = $('#content_deck_text p').text();
 
 	return deck;
 }

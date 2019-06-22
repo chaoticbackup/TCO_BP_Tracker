@@ -6,7 +6,7 @@ import {deleteDeck} from './deleteDeck';
 (function() {
 	if ($(".toolbar a:contains('Chaotic TCG')")) {
 		// if ($('input[value="editDeck"]').length) {
-		let cond1 = (window.location.href.indexOf("showDeck") > -1 
+		let cond1 = (window.location.href.indexOf("showDeck") > -1
 			&& window.location.href.indexOf("extended_format") > -1);
 		let cond2 = ($("b:contains('Edit your Deck')").length);
 
@@ -38,19 +38,25 @@ export function clearDisplay() {
 }
 
 function injectExport() {
-	let tmp = $("a[title*='Public web page']")
-		.parent().children().filter('div').first();
-	tmp.prepend(`<a href="javascript:;" id="exportTXT" title="Export the current deck to txt file" style='cursor:pointer'>[Export Text]&nbsp;&nbsp;</a>`);
-	tmp.prepend(`<a href="javascript:;" id="exportJSON" title="Export the current deck to json file" style='cursor:pointer'>[Export JSON]&nbsp;&nbsp;</a>`);
-	
+	let tmp = function() {
+		let t = $("a[title*='Public web page']");
+		if (t.length == 0) {
+			t = $("img[title*='This user is no longer registered']");
+		}
+		return t.parent().children().filter('div').first();
+	}();
+
+	tmp.prepend(`<a href="javascript:;" id="exportTXT" title="Export the current deck to .txt file" style='cursor:pointer'>[Export Text]&nbsp;&nbsp;</a>`);
+	// tmp.prepend(`<a href="javascript:;" id="exportJSON" title="Export the current deck to json file" style='cursor:pointer'>[Export JSON]&nbsp;&nbsp;</a>`);
+
 	if ($("a[title*='standard'").length > 0) {
-		$('#exportJSON').on('click', exportDeck.bind(this, 'extended', "json"));
+		// $('#exportJSON').on('click', exportDeck.bind(this, 'extended', "json"));
 		$('#exportTXT').on('click', exportDeck.bind(this, 'extended', "txt"));
 	}
 	else if ($("a[title*='extended'").length > 0) {
-		$('#exportJSON').on('click', exportDeck.bind(this, 'short', "json"));
+		// $('#exportJSON').on('click', exportDeck.bind(this, 'short', "json"));
 		$('#exportTXT').on('click', exportDeck.bind(this, 'short', "txt"));
-	} 
+	}
 }
 
 // inject the import/export on the page
@@ -77,7 +83,7 @@ function injectButtons() {
 }
 
 function injectBPTracker(type) {
-	// Inject the html for the tracker	
+	// Inject the html for the tracker
 	var tracker = document.createElement("div");
 	tracker.id = "tracker";
 	document.getElementById("main_content").appendChild(tracker);
@@ -91,7 +97,7 @@ function injectBPTracker(type) {
 				checkBP('edit');
 			});
 			// Check for other input changes
-			$('#deck_section_table_86').on("change", function() { 
+			$('#deck_section_table_86').on("change", function() {
 				checkBP("edit");
 			});
 		}
